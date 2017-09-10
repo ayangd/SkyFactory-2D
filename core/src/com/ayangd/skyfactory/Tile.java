@@ -3,8 +3,9 @@ package com.ayangd.skyfactory;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import static com.ayangd.skyfactory.SkyFactory.gridSize;
+
 public class Tile {
-	static int size = 20;
 	int x,y;
 	Texture texture;
 	
@@ -14,6 +15,6 @@ public class Tile {
 	}
 	
 	public void draw(SpriteBatch batch) {
-		batch.draw(texture, x * 20, y * 20);
+		batch.draw(texture, x * gridSize, y * gridSize);
 	}
 }

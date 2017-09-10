@@ -12,33 +12,38 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class SkyFactory extends ApplicationAdapter {
+	static int gridSize = 20;
+	
 	SpriteBatch batch;
 	Pixmap tileSelectorPixmap;
 	Texture tileSelector;
 	ArrayList<Tile> tiles;
+	Worker worker;
 	TileManager tileManager;
 	BitmapFont font;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		tileSelectorPixmap = new Pixmap(Tile.size, Tile.size, Pixmap.Format.RGBA4444);
+		tileSelectorPixmap = new Pixmap(gridSize, gridSize, Pixmap.Format.RGBA4444);
 		tileSelectorPixmap.setColor(Color.GOLD);
-		tileSelectorPixmap.drawRectangle(0, 0, Tile.size, Tile.size);
+		tileSelectorPixmap.drawRectangle(0, 0, gridSize, gridSize);
 		tileSelector = new Texture(tileSelectorPixmap);
 		tiles = new ArrayList<Tile>();
+		tiles.add(new DebugTile((Gdx.graphics.getWidth() / 2) / gridSize, (Gdx.graphics.getHeight() / 2) / gridSize));
 		tileManager = new TileManager();
 		font = new BitmapFont();
 		font.setColor(Color.WHITE);
+		worker = new Worker((Gdx.graphics.getWidth() / 2), (Gdx.graphics.getHeight() / 2) + gridSize);
 	}
 
 	@Override
 	public void render () {
 		// Input Processing
 		if(Gdx.input.isTouched()) {
-			int inX = Gdx.input.getX() / Tile.size;
-			int inY = (Gdx.graphics.getHeight() - Gdx.input.getY()) / Tile.size;
-			tileManager.add(new DebugTile(inX, inY), tiles);
+			int inX = Gdx.input.getX() / gridSize;
+			int inY = (Gdx.graphics.getHeight() - Gdx.input.getY()) / gridSize;
+			tileManager.add(new DebugTile(inX, inY), tiles, worker);
 		}
 		
 		// Draw
@@ -47,18 +52,25 @@ public class SkyFactory extends ApplicationAdapter {
 		batch.begin();
 		
 		// Draw Start
+		
+		// Draw Tiles
 		if(tiles.size() != 0)
 			for(int i = 0; i != tiles.size(); i++) {
 				tiles.get(i).draw(batch);
 			}
+		
+		// Draw Selector
 		batch.draw(tileSelector,
-				   Gdx.input.getX() / Tile.size * Tile.size,
-				   (Gdx.graphics.getHeight() - Gdx.input.getY()) / Tile.size * Tile.size
+				   Gdx.input.getX() / gridSize * gridSize,
+				   (Gdx.graphics.getHeight() - Gdx.input.getY()) / gridSize * gridSize
 				   );
+		// Draw Worker
+		worker.draw(batch);
+		
 		// Draw End
 		
 		// Draw Version
-		font.draw(batch, "Build: indev rc1" , 5, Gdx.graphics.getHeight() - 5);
+		font.draw(batch, "Build: indev rc2" , 5, Gdx.graphics.getHeight() - 5);
 		
 		batch.end();
 	}
