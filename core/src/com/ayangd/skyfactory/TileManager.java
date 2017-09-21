@@ -23,14 +23,17 @@ public class TileManager {
 		}
 	}
 	
+	public void remove(int x, int y, List<Tile> tiles) {
+		if(tiles.size() != 0)
+			for(int i = 0; i != tiles.size(); i++) {
+				if((x == tiles.get(i).x) && (y == tiles.get(i).y)) {
+					tiles.remove(i);
+					break;
+				}
+			}
+	}
+	
 	public boolean isBlockedByWorker(int x, int y, Worker worker) {
-		System.out.println("aa");
-		System.out.println(x * gridSize);
-		System.out.println(y * gridSize);
-		System.out.println((int) (worker.position.x - (worker.position.x % gridSize)));
-		System.out.println((int) (worker.position.x + (worker.position.x % gridSize)));
-		System.out.println((int) (worker.position.y - (worker.position.y % gridSize)));
-		System.out.println((int) (worker.position.y + (worker.position.y % gridSize)));
 		// Lower Worker
 		if(x * gridSize == (int) (worker.position.x - (worker.position.x % gridSize))) {
 			if(y * gridSize == (int) (worker.position.y - (worker.position.y % gridSize))) {
